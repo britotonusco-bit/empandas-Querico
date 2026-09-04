@@ -1,0 +1,3 @@
+-- OBSOLETO: NO EJECUTAR.
+-- La sincronización oficial del catálogo está en SUPABASE_SINCRONIZACION_MAESTRA.sql.
+-- Este archivo se conserva únicamente por compatibilidad con versiones anteriores.

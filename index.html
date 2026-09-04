@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Empanadas Que Rico — pedidos en línea, domicilios y recogida en sucursal.">
+  <title>Empanadas Que Rico | Pedidos</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<header class="header">
+  <a class="brand" href="#inicio" data-accion="elegir-sucursal" onclick="mostrarSelectorSucursal();return false;" aria-label="Empanadas Que Rico — elegir sucursal">
+    <img class="brand-logo" src="logo-empanadas-que-rico.png" alt="Empanadas Que Rico">
+  </a>
+  <nav class="nav">
+    <a href="#inicio">Inicio</a>
+    <a href="#menu">Menú</a>
+    <a href="#puntos">Sucursales</a>
+    <a href="#seguimiento">Seguimiento</a>
+    <button class="cart-button" type="button" onclick="abrirCarrito()">🛒 <span id="contadorCarrito">0</span></button>
+  </nav>
+</header>
+
+<main>
+<section id="inicio" class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">🥟 HECHO PARA DISFRUTAR</span>
+      <h1>Elige tu punto.<br><span>Arma tu pedido.</span></h1>
+      <p>Selecciona una sucursal y disfruta el menú disponible. El Punto 1 — Bombay 3 funciona únicamente como menú; los pedidos y domicilios están disponibles en los puntos que tienen ese servicio.</p>
+      <div class="hero-actions">
+        <button class="primary-btn" type="button" data-accion="elegir-sucursal" onclick="mostrarSelectorSucursal()">📍 Elegir sucursal</button>
+        <a class="secondary-btn" href="#menu">Ver menú</a>
+      </div>
+      <div id="sucursalActualBanner" class="selection-banner"></div>
+    </div>
+    <div class="hero-art">
+      <div class="hero-emoji">🥟</div>
+      <div class="floating-card"><b>3 puntos</b><span>Dosquebradas · Pereira</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="quick-info">
+  <div><span>🛵</span><b>Domicilios</b><small>Puntos 2 y 3 · 3:00 PM–10:30 PM</small></div>
+  <div><span>🏪</span><b>3 sucursales</b><small>Menú según el punto</small></div>
+  <div><span>🕒</span><b>Lunes a sábado</b><small>Horarios por sucursal</small></div>
+  <div><span>🔴</span><b>Domingo</b><small>Cerrado</small></div>
+</section>
+
+<section id="menu" class="section">
+  <div class="section-head">
+    <div>
+      <span class="eyebrow">MENÚ</span>
+      <h2>Lo que tenemos <span>para ti</span></h2>
+      <p id="subtituloSucursalMenu">Primero elige una sucursal.</p>
+    </div>
+    <input id="buscador" class="search" type="search" placeholder="🔎 Buscar producto..." oninput="filtrarProductos()">
+  </div>
+  <div id="menuCategoryTabs" class="menu-category-tabs" role="tablist" aria-label="Categorías del menú"></div>
+  <div id="menuContainer"></div>
+</section>
+
+<section id="puntos" class="section">
+  <div class="section-head centered">
+    <span class="eyebrow">UBICACIONES</span>
+    <h2>Nuestros <span>puntos físicos</span></h2>
+    <p>Consulta dirección, horario y servicio de domicilio.</p>
+  </div>
+  <div id="puntosFisicos" class="location-grid"></div>
+</section>
+
+<section id="seguimiento" class="section tracking">
+  <div class="section-head centered">
+    <span class="eyebrow">SEGUIMIENTO</span>
+    <h2>Consulta tu <span>pedido</span></h2>
+    <p>Usa el número de pedido que aparece al finalizar.</p>
+  </div>
+  <div class="tracking-box">
+    <input id="consultaPedido" inputmode="numeric" placeholder="Ej. 000001">
+    <button class="primary-btn" type="button" onclick="consultarPedido()">Consultar</button>
+  </div>
+  <div id="estadoPedidoCard" class="order-status-card">
+    <div class="status-placeholder">🧾 Escribe tu número de pedido para consultar el estado.</div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div><b>🥟 Empanadas Que Rico</b><span>Dosquebradas · Pereira · Risaralda</span></div>
+  <small>Pedidos y confirmaciones por WhatsApp · © 2026</small>
+</footer>
+
+<!-- Selector de sucursal -->
+<div id="overlaySucursal" class="modal-overlay hidden"></div>
+
+<!-- Carrito -->
+<div id="overlayCarrito" class="overlay hidden" onclick="cerrarSiOverlay(event)">
+  <aside class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-head"><h2>🛒 Tu pedido</h2><button type="button" onclick="cerrarCarrito()">✕</button></div>
+    <div id="carritoItems" class="cart-items"></div>
+    <div class="cart-costs">
+      <div><span>Productos</span><strong id="subtotal">$0</strong></div>
+      <div><span>Empaque</span><strong id="empaque">$0</strong></div>
+      <div><span>Domicilio</span><strong id="domicilio">$0</strong></div>
+      <div class="total"><span>Total</span><strong id="total">$0</strong></div>
+    </div>
+    <button class="secondary-btn full" type="button" onclick="agregarMasProductos()">+ Agregar más productos</button>
+    <button class="primary-btn full" type="button" onclick="abrirCheckout()">Continuar</button>
+  </aside>
+</div>
+
+<!-- Checkout -->
+<div id="overlayCheckout" class="modal-overlay hidden">
+  <div class="modal checkout-modal">
+    <button class="modal-close" type="button" onclick="cerrarCheckout()">✕</button>
+
+    <div id="checkoutPaso0">
+      <span class="eyebrow">PASO 1 · RESUMEN</span>
+      <h2>Resumen de tu pedido</h2>
+      <p class="muted">Revisa los productos y valores antes de continuar con los datos de entrega.</p>
+      <div id="resumenInicial" class="invoice-card"></div>
+      <button class="primary-btn full" type="button" onclick="irADatosEntrega()">Continuar con los datos →</button>
+      <button class="secondary-btn full" type="button" onclick="cerrarCheckout()">← Volver al carrito</button>
+    </div>
+
+    <div id="checkoutPaso1">
+      <span class="eyebrow">PASO 2 · ENTREGA</span>
+      <h2>Datos del cliente</h2>
+      <p class="muted">Todos los datos necesarios son obligatorios.</p>
+
+      <div class="delivery-choice-grid">
+        <button class="delivery-choice" type="button" onclick="seleccionarEntrega('domicilio')">
+          <span>🛵</span><strong>Domicilio</strong><small>Puntos 2 y 3</small>
+        </button>
+        <button class="delivery-choice" type="button" onclick="seleccionarEntrega('recoger')">
+          <span>🏪</span><strong>Recoger</strong><small>En el punto seleccionado</small>
+        </button>
+      </div>
+
+      <div id="formEntrega" class="hidden">
+        <div id="resumenModalidad" class="selection-banner"></div>
+        <form id="pedidoForm" onsubmit="mostrarPago(event)">
+          <label>Nombre completo *
+            <input id="clienteNombre" required maxlength="80" placeholder="Nombre y apellido">
+          </label>
+          <label>Teléfono *
+            <input id="clienteTelefono" required maxlength="20" inputmode="tel" placeholder="300 000 0000">
+          </label>
+
+          <div id="camposDomicilio" class="hidden">
+            <label>Punto que prepara el domicilio *
+              <select id="clienteSucursalDomicilio" onchange="actualizarDomicilio();renderCarrito()">
+                <option value="">Selecciona</option>
+                <option value="Cuba">Punto 2 — El Modelo</option>
+                <option value="Circunvalar">Punto 3 — Providencia</option>
+              </select>
+            </label>
+            <label>Ciudad *
+              <select id="clienteCiudad" onchange="cargarZonas()">
+                <option value="">Selecciona</option>
+                <option value="Pereira">Pereira</option>
+                <option value="Dosquebradas">Dosquebradas</option>
+                <option value="Cerritos">Cerritos</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Santa Rosa de Cabal">Santa Rosa de Cabal</option>
+                <option value="Parque Industrial">Parque Industrial</option>
+                <option value="Vía Armenia">Vía Armenia</option>
+              </select>
+            </label>
+            <label>Barrio o zona *
+              <select id="clienteZona" onchange="actualizarDomicilio()">
+                <option value="">Primero selecciona la ciudad</option>
+              </select>
+            </label>
+            <div id="zonaNoEncontrada" class="hidden">
+              <label>Barrio o zona no listado *
+                <input id="clienteZonaOtro" maxlength="100" placeholder="Escribe el nombre del barrio o sector">
+              </label>
+              <label>Distancia aproximada desde el punto *
+                <select id="clienteDistancia" onchange="actualizarDomicilio()">
+                  <option value="">Selecciona la distancia</option>
+                  <option value="1">1 a 3 cuadras — $5.300</option>
+                  <option value="2">4 a 6 cuadras — $6.300</option>
+                  <option value="3">7 a 9 cuadras — $7.300</option>
+                  <option value="4">10 a 12 cuadras — $8.300</option>
+                  <option value="5">13 a 15 cuadras — $9.300</option>
+                  <option value="6">16 a 18 cuadras — $10.300</option>
+                  <option value="7">Más de 18 cuadras — $11.300</option>
+                </select>
+              </label>
+              <div class="delivery-price">ℹ️ Si el barrio no aparece en la lista, escribe el barrio y selecciona la distancia aproximada. El valor se calcula automáticamente.</div>
+            </div>
+            <label>Dirección exacta *
+              <input id="clienteDireccion" maxlength="120" placeholder="Calle, carrera, número, casa/apto">
+            </label>
+            <div id="avisoDomicilio" class="delivery-price hidden">🛵 Domicilio: <strong id="valorDomicilio">$0</strong></div>
+            <div class="delivery-price">📦 Domicilio: <strong>caja obligatoria — $2.500</strong></div>
+          </div>
+
+          <div id="camposRecoger" class="hidden">
+            <label>Punto de recogida *
+              <select id="clienteSucursal">
+                <option value="">Selecciona</option>
+                <option value="Centro">Punto 1 — Bombay 3</option>
+                <option value="Cuba">Punto 2 — El Modelo</option>
+                <option value="Circunvalar">Punto 3 — Providencia</option>
+              </select>
+            </label>
+            <div class="packing-choice">
+              <h3>📦 Empaque</h3>
+              <label><input type="radio" name="empaque" value="caja" checked> Caja — $2.500</label>
+              <label><input type="radio" name="empaque" value="bolsa"> Bolsa — $0</label>
+            </div>
+          </div>
+
+          <label>Observaciones *
+            <textarea id="clienteNota" required maxlength="250" placeholder="Escribe 'Ninguna' si no tienes observaciones."></textarea>
+          </label>
+          <button class="primary-btn full" type="submit">Continuar al resumen →</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="checkoutPaso2" class="hidden">
+      <span class="eyebrow">PASO 3 · REVISAR</span>
+      <h2>Confirma tu pedido</h2>
+      <div id="resumenCheckout" class="summary-box"></div>
+      <button class="primary-btn full" type="button" onclick="irAlPago()">Elegir forma de pago →</button>
+      <button class="secondary-btn full" type="button" onclick="volverEntrega()">← Volver</button>
+    </div>
+
+    <div id="checkoutPasoPago" class="hidden">
+      <span class="eyebrow">PASO 4 · PAGO</span>
+      <h2>¿Cómo vas a pagar?</h2>
+      <div id="paymentOptions" class="payment-options"></div>
+    </div>
+
+    <div id="checkoutResultado" class="hidden"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

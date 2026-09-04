@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel privado | Empanadas Que Rico</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <main class="panel-shell">
+    <section id="loginView" class="login-card">
+      <div class="brand-mark">🥟</div>
+      <span class="eyebrow">EMPANADAS QUE RICO</span>
+      <h1>Acceso privado</h1>
+      <p class="muted">Ingresa con el usuario autorizado para administrar o consultar el sistema.</p>
+      <form id="loginForm">
+        <label>Correo
+          <input id="email" type="email" autocomplete="username" required placeholder="usuario@...">
+        </label>
+        <label>Contraseña
+          <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••">
+        </label>
+        <button class="primary" type="submit">Entrar</button>
+      </form>
+      <p id="loginError" class="error hidden"></p>
+    </section>
+
+    <section id="appView" class="hidden">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">PANEL PRIVADO</span>
+          <h1>Empanadas Que Rico</h1>
+          <p id="userInfo" class="muted"></p>
+        </div>
+        <button id="logoutBtn" class="secondary">Cerrar sesión</button>
+      </header>
+
+      <div id="accessMessage" class="notice hidden"></div>
+
+      <section class="dashboard-title">
+        <button id="closeWeekBtn" class="secondary" type="button" style="display:none">🗑️ Cerrar semana</button>
+        <div>
+          <span class="eyebrow">RESUMEN</span>
+          <h2>📊 Dashboard del administrador</h2>
+          <p class="muted">Vista rápida de los pedidos y ventas de hoy.</p>
+        </div>
+      </section>
+
+      <section class="stats dashboard-stats">
+        <article><span>📦 Pedidos de hoy</span><strong id="statToday">0</strong></article>
+        <article><span>🟡 En verificación</span><strong id="statVerification">0</strong></article>
+        <article><span>🟢 Validados</span><strong id="statValidated">0</strong></article>
+        <article><span>🍳 En preparación</span><strong id="statPreparation">0</strong></article>
+        <article><span>🛵 En domicilio</span><strong id="statDelivery">0</strong></article>
+        <article><span>✅ Entregados</span><strong id="statDelivered">0</strong></article>
+        <article><span>🔴 Rechazados</span><strong id="statRejected">0</strong></article>
+        <article><span>💰 Ventas de hoy</span><strong id="statSales">$0</strong></article>
+      </section>
+
+      <section class="dashboard-charts">
+        <div class="chart-card"><div class="section-head"><div><h2>📊 Pedidos por estado</h2><p class="muted">Distribución actual de los pedidos.</p></div></div><div id="chartStates" class="chart-area"></div></div>
+        <div class="chart-card"><div class="section-head"><div><h2>📈 Pedidos de los últimos 7 días</h2><p class="muted">Evolución diaria de pedidos registrados.</p></div></div><div id="chartLast7" class="chart-area"></div></div>
+        <div class="chart-card"><div class="section-head"><div><h2>💰 Ventas de los últimos 7 días</h2><p class="muted">Total de ventas por día, excluyendo pedidos rechazados.</p></div></div><div id="chartSales7" class="chart-area"></div></div>
+        <div class="chart-card chart-card-wide"><div class="section-head"><div><h2>🏆 Productos más vendidos</h2><p class="muted">Unidades vendidas por producto, excluyendo pedidos rechazados.</p></div></div><div id="topProductHighlight" class="top-product-highlight"></div><div id="chartProducts" class="chart-area"></div></div>
+        <div class="chart-card"><div class="section-head"><div><h2>🏪 Ventas por sucursal</h2><p class="muted">Comparación de ventas acumuladas, excluyendo pedidos rechazados.</p></div></div><div id="topBranchHighlight" class="top-branch-highlight"></div><div id="chartBranchSales" class="chart-area"></div></div>
+        <div class="chart-card"><div class="section-head"><div><h2>📦 Pedidos por sucursal</h2><p class="muted">Cantidad de pedidos registrados por cada sucursal.</p></div></div><div id="chartBranchOrders" class="chart-area"></div></div>
+      </section>
+
+      <section class="product-branch-ranking">
+        <div class="section-head">
+          <div>
+            <h2>🏆 Ranking de productos por sucursal</h2>
+            <p class="muted">Productos más vendidos en cada punto, excluyendo pedidos rechazados.</p>
+          </div>
+        </div>
+        <div id="productBranchRanking" class="product-branch-grid"></div>
+      </section>
+
+      <section class="dashboard-branches">
+        <div class="section-head">
+          <div>
+            <h2>🏪 Resumen por sucursal</h2>
+            <p class="muted">Pedidos y ventas de hoy por punto de atención.</p>
+          </div>
+        </div>
+        <div id="branchSummary" class="branch-grid"></div>
+      </section>
+
+
+      <div id="productCategoryNav" class="product-category-nav">
+  <button type="button" class="category-tab active" data-cat="all">Todos</button>
+  <button type="button" class="category-tab" data-cat="Papas rellenas">🥔 Papas rellenas</button>
+  <button type="button" class="category-tab" data-cat="Empanadas">🥟 Empanadas</button>
+  <button type="button" class="category-tab" data-cat="Arepas">🫓 Arepas</button>
+  <button type="button" class="category-tab" data-cat="Mega empanadas de 30 cm">📏 Mega empanadas de 30 cm</button>
+  <button type="button" class="category-tab" data-cat="Gaseosas Coca-Cola">🥤 Gaseosas Coca-Cola</button>
+  <button type="button" class="category-tab" data-cat="Postobón">🥤 Postobón</button>
+  <button type="button" class="category-tab" data-cat="Congeladas">🧊 Congeladas</button>
+  <button type="button" class="category-tab" data-cat="Salsas">🧂 Salsas</button>
+</div>
+<section id="productsSection" class="products-section hidden">
+        <div class="section-title">
+          <span class="eyebrow">ADMINISTRACIÓN</span>
+          <h2>🍽️ Gestión de productos</h2>
+          <p class="muted">Crea y edita productos. Para cada producto puedes elegir en qué sucursales está disponible.</p>
+        </div>
+
+        <div class="product-editor">
+          <div class="section-head">
+            <div>
+              <h2 id="productFormTitle">Nuevo producto</h2>
+              <p class="muted">El ID no se cambia al editar. Las sucursales controlan dónde está disponible el producto.</p>
+            </div>
+            <button id="cancelProductBtn" class="secondary hidden" type="button">Cancelar edición</button>
+          </div>
+          <div class="product-form-grid">
+            <label>ID del producto<input id="productId" type="text" placeholder="ej. papa-rellena-tradicional"></label>
+            <label>Categoría
+              <select id="productCategory">
+                <option value="">Selecciona una categoría</option>
+                <option value="Papas rellenas">Papas rellenas</option>
+                <option value="Empanadas">Empanadas</option>
+                <option value="Arepas">Arepas</option>
+                <option value="Mega empanadas de 30 cm">Mega empanadas de 30 cm</option>
+                <option value="Gaseosas Coca-Cola">Gaseosas Coca-Cola</option>
+                <option value="Postobón">Postobón</option>
+                <option value="Congeladas">Congeladas</option>
+                <option value="Extras">Extras</option>
+                <option value="Salsas">Salsas</option>
+              </select>
+            </label>
+            <label>Icono / emoji<input id="productIcon" type="text" maxlength="8" placeholder="🥟"></label>
+            <label>Imagen del producto<input id="productImage" type="file" accept="image/*"><small class="field-help">Opcional. JPG, PNG o WebP. Máximo 3 MB.</small></label>
+            <label>Nombre<input id="productName" type="text" placeholder="Nombre del producto"></label>
+            <label class="product-wide">Descripción<input id="productDescription" type="text" placeholder="Descripción corta"></label>
+            <label>Precio<input id="productPrice" type="number" min="0" step="100" placeholder="5000"></label>
+          </div>
+          <div class="product-branches">
+            <b>Sucursales donde está disponible</b>
+            <p class="muted">Postobón está restringido al Punto 2 — El Modelo. Desde aquí puedes crear el producto, poner precio, descripción e icono y marcar su disponibilidad.</p>
+            <div class="branch-checks">
+              <label><input id="branchCentro" type="checkbox" value="Centro"> Bombay</label>
+              <label><input id="branchCuba" type="checkbox" value="Cuba"> Barrio El Modelo</label>
+              <label><input id="branchCircunvalar" type="checkbox" value="Circunvalar"> Barrio Providencia</label>
+            </div>
+          </div>
+          <button id="saveProductBtn" class="primary" type="button">Guardar producto</button>
+          <p id="productMessage" class="notice hidden"></p>
+        </div>
+
+        <div class="toolbar product-toolbar">
+          <input id="productSearch" type="search" placeholder="🔎 Buscar por nombre, ID o categoría">
+          <button id="refreshProductsBtn" class="secondary" type="button">Actualizar productos</button>
+        </div>
+        <div id="productsList" class="products-list"></div>
+      </section>
+
+      <section id="deliverySection" class="delivery-section hidden">
+        <div class="section-title">
+          <span class="eyebrow">ADMINISTRACIÓN</span>
+          <h2>🛵 Configuración de domicilios</h2>
+          <p class="muted">Edita el precio, ciudad, zona y punto que atiende cada domicilio. Estos valores quedan guardados en Supabase.</p>
+        </div>
+        <div class="delivery-editor">
+          <div class="section-head">
+            <div><h2 id="deliveryFormTitle">Nueva zona de domicilio</h2><p class="muted">Puedes cambiar estos datos cuando cambien las tarifas o las zonas.</p></div>
+            <button id="cancelDeliveryEditBtn" class="secondary hidden" type="button" onclick="limpiarFormularioDomicilio()">Cancelar edición</button>
+          </div>
+          <div class="product-form-grid">
+            <label>Ciudad<input id="deliveryCity" list="deliveryCitiesList" type="text" placeholder="Selecciona o escribe una ciudad"><datalist id="deliveryCitiesList"></datalist></label>
+            <label>Zona / barrio<input id="deliveryZone" type="text" placeholder="Nombre del barrio o zona"></label>
+            <label>Punto que atiende<select id="deliveryBranch"><option value="">Selecciona</option><option value="Cuba">Barrio El Modelo</option><option value="Circunvalar">Barrio Providencia</option><option value="Ambos">Ambos puntos</option></select></label>
+            <label id="deliverySinglePriceWrap">Precio<input id="deliveryPrice" type="number" min="0" step="500" placeholder="5000"></label>
+            <label id="deliveryModelPriceWrap" class="hidden">Precio El Modelo<input id="deliveryModelPrice" type="number" min="0" step="500" placeholder="5000"></label>
+            <label id="deliveryProvidenciaPriceWrap" class="hidden">Precio Providencia<input id="deliveryProvidenciaPrice" type="number" min="0" step="500" placeholder="6000"></label>
+          </div>
+          <p class="muted delivery-price-help">Cada punto puede tener una tarifa diferente. Si eliges <strong>Ambos puntos</strong>, configura un precio independiente para El Modelo y Providencia.</p>
+          <label class="product-active"><input id="deliveryActive" type="checkbox" checked> Zona activa para recibir domicilios</label>
+          <div class="delivery-editor-actions">
+            <button id="saveDeliveryBtn" class="primary" type="button">Guardar zona</button>
+            <button id="clearDeliveryFormBtn" class="secondary" type="button">Limpiar</button>
+          </div>
+          <p id="deliveryMessage" class="notice hidden"></p>
+        </div>
+        <div class="toolbar product-toolbar"><button id="refreshDeliveryBtn" class="secondary" type="button">Actualizar domicilios</button></div>
+        <div id="deliveryList" class="delivery-list"></div>
+      </section>
+
+      <section class="toolbar">
+        <input id="searchInput" type="search" placeholder="🔎 Buscar por número, cliente o teléfono">
+        <button id="refreshBtn" class="secondary">Actualizar</button>
+      </section>
+
+      <section class="section-title">
+        <span class="eyebrow">PEDIDOS</span>
+        <h2>Pedidos</h2>
+      </section>
+      <section id="ordersList" class="orders"></section>
+
+      <section id="technicianTools" class="technician-tools hidden">
+        <div class="section-title">
+          <span class="eyebrow">PANEL TÉCNICO</span>
+          <h2>🧹 Limpieza de registros</h2>
+          <p class="muted">Herramientas de limpieza. Requieren confirmación y solo están disponibles para el técnico.</p>
+        </div>
+        <div class="technician-actions">
+          <button id="deleteDeliveryReceiptsBtn" class="danger" type="button">🛵 Borrar todos los recibos de domicilios</button>
+          <button id="deleteAllHistoryBtn" class="danger" type="button">📋 Borrar todo el historial de pedidos</button>
+        </div>
+      </section>
+
+      <section class="history-section">
+        <div class="section-title history-head">
+          <div>
+            <span class="eyebrow">AUDITORÍA</span>
+            <h2>Historial completo</h2>
+            <p class="muted">Registro de todos los cambios de estado realizados en los pedidos.</p>
+          </div>
+          <button id="refreshHistoryBtn" class="secondary">Actualizar historial</button>
+        </div>
+        <div class="history-filters">
+          <input id="historyOrderFilter" type="search" placeholder="🔎 Pedido (ej. 000001)">
+          <input id="historyUserFilter" type="search" placeholder="👤 Usuario o rol">
+          <select id="historyStateFilter">
+            <option value="">📌 Todos los estados</option>
+            <option value="verificacion">En verificación</option>
+            <option value="validado">Validado</option>
+            <option value="rechazado">Rechazado</option>
+            <option value="preparacion">En preparación</option>
+            <option value="en_domicilio">En domicilio</option>
+            <option value="entregado">Entregado</option>
+          </select>
+          <label class="date-filter">Desde <input id="historyDateFrom" type="date"></label>
+          <label class="date-filter">Hasta <input id="historyDateTo" type="date"></label>
+          <button id="clearHistoryFiltersBtn" class="secondary" type="button">Limpiar filtros</button>
+        </div>
+        <div id="historyFilterSummary" class="muted history-summary"></div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="panel.js"></script>
+  <script src="panel_navegacion.js"></script>
+  <script src="panel_cierre_semanal.js"></script>
+</body>
+</html>
